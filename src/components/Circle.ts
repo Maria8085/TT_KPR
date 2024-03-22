@@ -8,6 +8,9 @@ export class Circle {
     public radius: number = 0;
     public mass: number = 0;
 
+    public dx = Math.random()%10;
+    public dy = Math.random()%10;
+
     constructor(x: number,y: number, radius: number, color?: Color) {
         this.x = x;
         this.y = y;
@@ -27,8 +30,19 @@ export class Circle {
         context.stroke();
         context.closePath();
 
-        this.x = this.x +1;
+        this.x+=this.dx;
+        this.y+=this.dy;
+        if(((this.x+this.radius)>1000)||((this.x+this.radius)<0)){
+        this.dx = -this.dx;
+        }
+        if(((this.y+this.radius)>1000)||((this.y+this.radius)<0)){
+            this.dy = -this.dy;
+            }
 
         context.fillStyle = currentColor;
     }
+
+    // getFisiks(context: CanvasRenderingContext2D){
+
+    // }
 }
