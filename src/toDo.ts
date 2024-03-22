@@ -1,16 +1,26 @@
+import { Circle } from "./components/Circle";
+
+
+
 export function initialCanvas(canvas: HTMLCanvasElement){
     const context = canvas.getContext('2d');
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = 70;
-    if(!context){
-        return null;
+    const shapes = [
+        new Circle(100,100,50, "#ff00ff"),
+        new Circle(350,200,100),
+    ] 
+    function draw(){
+        if(!context){
+            return null;
+        }
+        context.beginPath();
+        context.fillStyle = '#0c5705';
+        context.fillRect(0, 0, canvas.width, canvas.height); 
+        context.closePath();
+        shapes.forEach(shape=>{
+            shape.draw(context);
+        });
+        window.requestAnimationFrame(draw);
     }
-    context.beginPath();
-    context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-    context.fillStyle = 'green';
-    context.fill();
-    context.lineWidth = 5;
-    context.strokeStyle = '#003300';
-    context.stroke();
+
+    window.requestAnimationFrame(draw);
 }

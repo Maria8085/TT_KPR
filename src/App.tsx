@@ -12,7 +12,9 @@ function App() {
 
   return (
     <>
-      <canvas ref={ref} width={200} height={200}/>
+    <div onClick={()=>{console.log("aaaa!");
+    }}>lol</div>
+      <canvas ref={ref} width={1000} height={800}/>
     </>
   )
 }
