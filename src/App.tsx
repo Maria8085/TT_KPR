@@ -12,8 +12,8 @@ function App() {
 
   return (
     <>
-    <div onClick={()=>{console.log("aaaa!");
-    }}>lol</div>
+    {/* <div onClick={()=>{console.log("aaaa!");
+    }}>lol</div> */}
       <canvas ref={ref} width={1000} height={800}/>
     </>
   )

@@ -32,17 +32,13 @@ export class Circle {
 
         this.x+=this.dx;
         this.y+=this.dy;
-        if(((this.x+this.radius)>1000)||((this.x+this.radius)<0)){
+        if(((this.x+this.radius)>1000)||((this.x-this.radius)<0)){
         this.dx = -this.dx;
         }
-        if(((this.y+this.radius)>1000)||((this.y+this.radius)<0)){
+        if(((this.y+this.radius)>800)||((this.y-this.radius)<0)){
             this.dy = -this.dy;
-            }
+        }
 
         context.fillStyle = currentColor;
     }
-
-    // getFisiks(context: CanvasRenderingContext2D){
-
-    // }
 }

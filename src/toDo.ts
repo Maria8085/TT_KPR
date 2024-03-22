@@ -6,7 +6,9 @@ export function initialCanvas(canvas: HTMLCanvasElement){
     const context = canvas.getContext('2d');
     const shapes = [
         new Circle(100,100,50, "#ff00ff"),
-        new Circle(350,200,100),
+        new Circle(350,200,100, "#ffff00"),
+        new Circle(550,200,60, "#ff0000"),
+        new Circle(350,600,100, "#00ff00"),
     ] 
     function draw(){
         if(!context){
