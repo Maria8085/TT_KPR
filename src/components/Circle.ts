@@ -8,8 +8,10 @@ export class Circle {
     public radius: number = 0;
     public mass: number = 0;
 
-    public dx = Math.random()%10;
-    public dy = Math.random()%10;
+    public dx = 3;
+    public dy = 3;
+    // public dx = Math.random()%10;
+    // public dy = Math.random()%10;
 
     constructor(x: number,y: number, radius: number, color?: Color) {
         this.x = x;
