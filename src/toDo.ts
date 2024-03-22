@@ -6,14 +6,11 @@ export function initialCanvas(canvas: HTMLCanvasElement) {
     if (!context) {
         return null
     }
-    const shapes = [
-        new Ball({
-            context, position: [100, 100], radius: 50, color: "#ff00ff", delta: [2, 0]
-        }),
-        new Ball({
-            context, position: [300, 100], radius: 20, color: "#00ff00", delta: [-2, 0]
-        }),
-    ]
+    const shapes = Array.from({length: 2},(_,index) => {
+        return new Ball({
+            context, position: [index*50+50,index*50], radius:Math.random()*50, color: "#ff00ff", delta: [Math.random()*20, Math.random()*20]
+        })
+    })
 
     function draw() {
         if (!context) {

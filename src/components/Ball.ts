@@ -2,16 +2,15 @@ export type Color = string | CanvasGradient | CanvasPattern
 export type Vector = [number, number]
 
 export class Ball {
-    private friction: number = 0.99
     private minSpeed: number = 0.005
     private context: CanvasRenderingContext2D
     public position: Vector = [0, 0]
     public delta: Vector
-
     public color: Color = "#00CC00"
 
     public radius: number = 0;
     public mass: number = 0;
+    private friction: number = 0.999
 
     constructor({context, position, radius, color, delta}: {
         context: CanvasRenderingContext2D,
@@ -24,17 +23,25 @@ export class Ball {
         this.delta = delta ?? [Math.random() % 10, Math.random() % 10];
         this.position = position;
         this.radius = radius;
-        this.mass = (4 / 3) * Math.PI * Math.pow(radius, 3);
+        this.mass = (4 / 3) * Math.PI * Math.pow(radius/10, 3);
         this.color = color ?? "#00CC00"
     }
 
     private checkWallCollision() {
         const width = this.context.canvas.width
         const height = this.context.canvas.height
-        if (this.position[0] + this.radius > width || this.position[0] - this.radius < 0) {
+        if (this.position[0] + this.radius > width) {
+            this.position[0] = width - this.radius
+            this.delta[0] = -this.delta[0];
+        } else if (this.position[0] - this.radius < 0) {
+            this.position[0] = this.radius
             this.delta[0] = -this.delta[0];
         }
-        if (this.position[1] + this.radius > height || this.position[1] - this.radius < 0) {
+        if (this.position[1] + this.radius > height) {
+            this.position[1] = height - this.radius
+            this.delta[1] = -this.delta[1]
+        } else if (this.position[1] - this.radius < 0) {
+            this.position[1] = this.radius
             this.delta[1] = -this.delta[1]
         }
     }
@@ -55,17 +62,19 @@ export class Ball {
         }
     }
 
-
-
     public checkBallCollision(ball: Ball) {
+
         const distance = Math.sqrt(
             (this.position[0] - ball.position[0]) **  2 + (this.position[1] - ball.position[1]) ** 2
     );
-        if (distance < this.radius + ball.radius) {
+        if (distance < (this.radius + ball.radius)) {
             this.delta[0] = -this.delta[0];
             this.delta[1] = -this.delta[1];
-            ball.delta[0] = -ball.delta[0];
-            ball.delta[1] = -ball.delta[1];
+            // ball.delta[0] = -ball.delta[0];
+            // ball.delta[1] = -ball.delta[1];
+            this.color = "#ff0000"
+        }else{
+            this.color = "#00ff00"
         }
     }
 
