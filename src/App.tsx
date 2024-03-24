@@ -1,22 +1,20 @@
-import { useEffect, useRef } from 'react'
+import {useEffect, useRef} from 'react'
 import './App.css'
-import { initialCanvas } from './toDo'
+import {initialCanvas} from './initialBilliard.ts'
 
 function App() {
-  const ref = useRef<HTMLCanvasElement>(null)
-  useEffect(()=>{
-    if(ref.current){
-      initialCanvas(ref.current);
-    }
-  },[ref])
+    const ref = useRef<HTMLCanvasElement>(null)
+    useEffect(() => {
+        if (ref.current) {
+            initialCanvas(ref.current);
+        }
+    }, [ref])
 
-  return (
-    <>
-    <div onClick={()=>{console.log("aaaa!");
-    }}>lol</div>
-      <canvas ref={ref} width={1000} height={800}/>
-    </>
-  )
+    return (
+        <>
+            <canvas ref={ref} width={1000} height={800}/>
+        </>
+    )
 }
 
 export default App
