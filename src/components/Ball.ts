@@ -4,19 +4,19 @@ export type Color = string | CanvasGradient | CanvasPattern
 export type Vector = [number, number]
 
 export class Ball {
-    private minSpeed: number = 0.005
+    private minSpeed: number = 0.005 // Минимальная скорость на которой шар остановиться
     private context: CanvasRenderingContext2D
-    public position: Vector = [0, 0]
-    public target: Vector = [0, 0]
-    public delta: Vector
-    public color: Color = "#00CC00"
-    public isGrabbed: boolean = false
-    public isHovered: boolean = false
+    private collisionTAX: number = 0.95 // Потеря скорости при столкновении со стеной
+    private friction: number = 0.995 // Потеря скорости от трения
 
     public radius: number = 0;
-    public mass: number = 0;
-    private friction: number = 0.995
-    private collisionTAX: number = 0.95
+    public position: Vector = [0, 0] // Текущая позиция
+    public target: Vector = [0, 0] // Цель ускорения для линейной интерполяции
+    public delta: Vector // Дельта смещения
+    public color: Color = "#00CC00"
+
+    public isGrabbed: boolean = false
+    public isHovered: boolean = false
     private isSoundPlayed = false
 
     constructor({context, position, radius, color, delta}: {
@@ -30,7 +30,6 @@ export class Ball {
         this.delta = delta ?? [Math.random() % 10, Math.random() % 10];
         this.position = position;
         this.radius = radius;
-        this.mass = (4 / 3) * Math.PI * Math.pow(radius / 10, 3);
         this.color = color ?? "#00CC00"
     }
 
@@ -48,13 +47,19 @@ export class Ball {
         }
     }
 
+    // Проверка столкновений со стенами
     private checkWallCollision() {
         const width = this.context.canvas.width
         const height = this.context.canvas.height
-        let isHit = false
+        let isHit = false // Был ли удар?
         if (this.position[0] + this.radius > width) {
+            // Выталкиваем шарик назад
             this.position[0] = width - this.radius
+
+            // Смена вектора движения
             this.delta[0] = -this.delta[0];
+
+            // Был удар
             isHit = true
         } else if (this.position[0] - this.radius < 0) {
             this.position[0] = this.radius
@@ -76,12 +81,16 @@ export class Ball {
     }
 
     updatePosition() {
+
+        // Логика при захвате
         if (this.isGrabbed) {
             const x = lerp(0, this.target[0] - this.position[0], 0.5);
             const y = lerp(0, this.target[1] - this.position[1], 0.5);
             this.delta[0] = x
             this.delta[1] = y
         }
+
+        // Смещение шарика на дельту смещения
         this.position[0] += this.delta[0]
         this.position[1] += this.delta[1]
 
@@ -101,25 +110,35 @@ export class Ball {
         }
     }
 
+    //Проверка столкновения с другими шарами
     public checkBallCollision(ball: Ball) {
+        // Расстояние между шарами
         let distance = Math.sqrt((this.position[0] - ball.position[0]) ** 2 + (this.position[1] - ball.position[1]) ** 2);
+        // Защита от деления на 0
         if (distance == 0) {
             distance = 0.001;
         }
-        let Dx = this.position[0] - ball.position[0];
-        let Dy = this.position[1] - ball.position[1];
-        let sin = Dx / distance;
-        let cos = Dy / distance;
+        // Если было столкновение
         if (distance < (this.radius + ball.radius)) {
+            let Dx = this.position[0] - ball.position[0];
+            let Dy = this.position[1] - ball.position[1];
+
+            let sin = Dx / distance;
+            let cos = Dy / distance;
+
             let Vn1 = ball.delta[0] * sin + ball.delta[1] * cos;
             let Vn2 = this.delta[0] * sin + this.delta[1] * cos;
             let dt = (ball.radius + this.radius - distance) / (Vn1 - Vn2);
+
+            // Отодвигаем шары друг от друга
             if (dt > 0.6) {
                 dt = 0.6
             }
             if (dt < -0.6) {
                 dt = -0.6
             }
+
+            // Магия преобразования координат
             this.position[0] -= this.delta[0] * dt;
             this.position[1] -= this.delta[1] * dt;
             ball.position[0] -= ball.delta[0] * dt;
@@ -139,6 +158,7 @@ export class Ball {
             Vn2 = Vn1;
             Vn1 = o;
 
+            // Уменьшение скорости и смена векторов движения
             this.delta[0] = (Vn2 * sin - Vt2 * cos) * this.collisionTAX;
             this.delta[1] = (Vn2 * cos + Vt2 * sin) * this.collisionTAX;
             ball.delta[0] = (Vn1 * sin - Vt1 * cos) * this.collisionTAX;

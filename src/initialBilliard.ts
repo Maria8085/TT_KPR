@@ -1,5 +1,9 @@
 import {Ball} from "./components/Ball.ts";
 
+export type CustomEventType = {
+    e: MouseEvent,
+    ball: Ball | null
+}
 
 export function initialCanvas(canvas: HTMLCanvasElement) {
     const context = canvas.getContext('2d');
@@ -43,15 +47,29 @@ export function initialCanvas(canvas: HTMLCanvasElement) {
         })
     ]
 
-    canvas.addEventListener('mousedown', () => {
+    canvas.addEventListener('mousedown', (e) => {
+        console.log(e.button)
         // Check if mouse is over a ball
-        shapes.forEach((ball) => {
-            if (ball.isHovered) {
-                ball.target = [mouseX, mouseY]
-                ball.isGrabbed = true
-                grabbedBall = ball
-            }
-        })
+        let ballIsHovered = false
+        if (e.button === 0) {
+            shapes.forEach((ball) => {
+                if (ball.isHovered) {
+                    ballIsHovered = true
+                    ball.target = [mouseX, mouseY]
+                    ball.isGrabbed = true
+                    grabbedBall = ball
+                }
+            })
+        }
+        if (!ballIsHovered) {
+            const event = new CustomEvent<CustomEventType>("clickBall", {
+                detail: {
+                    e,
+                    ball: null,
+                }
+            });
+            document.dispatchEvent(event);
+        }
     });
 
     canvas.addEventListener('mousemove', (e) => {
@@ -63,10 +81,36 @@ export function initialCanvas(canvas: HTMLCanvasElement) {
         }
     });
 
-    canvas.addEventListener('mouseup', () => {
+    document.addEventListener('mouseup', () => {
         if (grabbedBall) {
             grabbedBall.isGrabbed = false;
             grabbedBall = null;
+        }
+    });
+
+    canvas.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        let ballIsClicked = false
+        shapes.forEach((ball) => {
+            if (ball.isHovered) {
+                ballIsClicked = true
+                const event = new CustomEvent<CustomEventType>("clickBall", {
+                    detail: {
+                        e,
+                        ball,
+                    }
+                });
+                document.dispatchEvent(event);
+            }
+        })
+        if (!ballIsClicked) {
+            const event = new CustomEvent<CustomEventType>("clickBall", {
+                detail: {
+                    e,
+                    ball: null,
+                }
+            });
+            document.dispatchEvent(event);
         }
     });
 
@@ -79,17 +123,17 @@ export function initialCanvas(canvas: HTMLCanvasElement) {
         context.fillStyle = '#0c5705';
         context.fillRect(0, 0, canvas.width, canvas.height);
         context.closePath();
-        shapes.forEach((shape, index) => {
-            if (shape.isPointInCircle(mouseX, mouseY)) {
+        shapes.forEach((ball, index) => {
+            if (ball.isPointInCircle(mouseX, mouseY)) {
                 canvas.style.cursor = 'grab';
             }
             shapes.forEach((otherBall, otherIndex) => {
                 if (index !== otherIndex) {
-                    shape.checkBallCollision(otherBall)
+                    ball.checkBallCollision(otherBall)
                 }
             })
-            shape.updatePosition();
-            shape.draw();
+            ball.updatePosition();
+            ball.draw();
         });
         window.requestAnimationFrame(draw);
     }
