@@ -5,7 +5,7 @@ import {Ball} from "./Ball.ts";
 
 export const ColorPiker = () => {
     const [isVisible, setIsVisible] = useState(false);
-    const [ball, setBall] = useState<Ball>(null)
+    const [ball, setBall] = useState<Ball | null>(null)
     useEffect(() => {
         document.addEventListener('clickBall', ({detail}: { detail: CustomEventType }) => {
             if (detail.ball) {
@@ -19,8 +19,13 @@ export const ColorPiker = () => {
     }, []);
     if (!isVisible) return null
     return (
-        <Sketch onChange={(color) => {
-            ball.color = color.hexa
-        }}/>
+        <Sketch
+            color={ball?.color as string}
+            style={{position: "absolute", bottom: "30px", right: "30px"}}
+            onChange={(color) => {
+                if (ball) {
+                    ball.color = color.hexa
+                }
+            }}/>
     );
 }

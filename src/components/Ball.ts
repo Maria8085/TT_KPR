@@ -174,21 +174,22 @@ export class Ball {
         return distance < this.radius;
     }
 
-    private ballColor(): Color {
-        if (this.isGrabbed) return '#ff0000'
-        if (this.isHovered) return '#0000ff'
-        return this.color
+    private ballfilter() {
+        if (this.isGrabbed) return "brightness(100%)"
+        if (this.isHovered) return "brightness(170%)";
+        return "brightness(100%)";
     }
 
     draw() {
         this.context.save();
         this.context.beginPath();
-        this.context.shadowOffsetX = 5;
-        this.context.shadowOffsetY = 5;
-        this.context.shadowBlur = 10;
+        this.context.shadowOffsetX = this.isGrabbed ? 10 : 5;
+        this.context.shadowOffsetY = this.isGrabbed ? 10 : 5;
+        this.context.shadowBlur = this.isGrabbed ? 20 : 10;
         this.context.shadowColor = "rgb(0 0 0 / 50%)";
-        this.context.fillStyle = this.ballColor();
+        this.context.fillStyle = this.color;
         this.context.strokeStyle = '#003300';
+        this.context.filter = this.ballfilter();
         this.context.arc(this.position[0], this.position[1], this.radius, 0, 2 * Math.PI, false);
         this.context.fill();
         this.context.lineWidth = 5;

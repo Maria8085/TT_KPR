@@ -15,35 +15,49 @@ export function initialCanvas(canvas: HTMLCanvasElement) {
     }
     const shapes = [
         new Ball({
-            context, position: [0, 0], radius: Math.random() * 50 + 20, delta: [Math.random() * 20, Math.random() * 20]
+            context, position: [225, 350], color: '#fff', radius: Math.random() * 50 + 30, delta: [0, 0]
         }),
         new Ball({
             context,
-            position: [200, 200],
-            radius: Math.random() * 50 + 20,
-            color: "#ff00ff",
-            delta: [Math.random() * 20, Math.random() * 20]
+            position: [600, 350],
+            radius: Math.random() * 50 + 30,
+            color: "#f80000",
+            delta: [0, 0]
         }),
         new Ball({
             context,
-            position: [400, 200],
-            radius: Math.random() * 50 + 20,
-            color: "#ff00ff",
-            delta: [Math.random() * 20, Math.random() * 20]
+            position: [750, 450],
+            radius: Math.random() * 50 + 30,
+            color: "#fefe22",
+            delta: [0, 0]
         }),
         new Ball({
             context,
-            position: [200, 400],
-            radius: Math.random() * 50 + 20,
-            color: "#ff00ff",
-            delta: [Math.random() * 20, Math.random() * 20]
+            position: [750, 250],
+            radius: Math.random() * 50 + 30,
+            color: "#0000cc",
+            delta: [0, 0]
         }),
         new Ball({
             context,
-            position: [400, 400],
-            radius: Math.random() * 50 + 20,
+            position: [900, 150],
+            radius: Math.random() * 50 + 30,
             color: "#ff00ff",
-            delta: [Math.random() * 20, Math.random() * 20]
+            delta: [0, 0]
+        }),
+        new Ball({
+            context,
+            position: [900, 350],
+            radius: Math.random() * 50 + 30,
+            color: "#00ff00",
+            delta: [0, 0]
+        }),
+        new Ball({
+            context,
+            position: [900, 550],
+            radius: Math.random() * 50 + 30,
+            color: "#00ffdd",
+            delta: [0, 0]
         })
     ]
 

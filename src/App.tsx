@@ -13,7 +13,7 @@ function App() {
 
     return (
         <>
-            <canvas ref={ref} width={1000} height={600}/>
+            <canvas ref={ref} width={1200} height={700}/>
             <div style={{display: "flex", justifyContent: "space-between"}}>
                 <div style={{textAlign: "left"}}>
                     <p>Двигать шары можно левой кнопкой мыши</p>
